@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class Hand : MonoBehaviour {
 
-	List<Card> cards = new List<Card>();
+	private List<Card> cards = new List<Card>();
 
 	[SerializeField]
 	private GameObject cardPrefab;
@@ -15,31 +15,20 @@ public class Hand : MonoBehaviour {
 
 	[SerializeField]
 	private Transform selectedCardPanel;
+
+	public Card selectedCard;
 	
 	void Start () {
-		for(int i=0; i < 5; i++)
-		{
-			GameObject card = (GameObject)Instantiate(cardPrefab);
-			card.transform.SetParent(transform);
-			card.transform.localScale = Vector3.one;
-			AddCard(card.GetComponent<Card>());
-		}
 	}
 	
 	void Update () {
-		if(Input.GetKeyDown(KeyCode.A))
-		{
-			GameObject card = (GameObject)Instantiate(cardPrefab);
-			card.transform.SetParent(transform);
-			card.transform.localScale = Vector3.one;
-			AddCard(card.GetComponent<Card>());
-		}
 	}
 
-	void AddCard(Card card)
+	public void AddCard(Card card)
 	{
 		card.selectedCardPanel = selectedCardPanel;
-		card.hand = transform;
+		card.transform.SetSiblingIndex(cards.Count);
+		card.hand = this;
 		cards.Add(card);
 			
 		if(cards.Count > 1)
