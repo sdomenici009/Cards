@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
 public class Deck : MonoBehaviour {
 
 	private List<Card> cards = new List<Card>();
+
+	public Sprite[] cardBacks;
 
 	[SerializeField]
 	private Hand hand;
@@ -14,6 +17,9 @@ public class Deck : MonoBehaviour {
 
 	void Start () {
 		int testCardInfo = 0;
+
+		Sprite cardBack = cardBacks[Random.Range(0, cardBacks.Length)];
+
 		for(int i=0; i < 40; i++)
 		{
 			if(i!=0 && i%4 == 0) testCardInfo++;
@@ -22,7 +28,21 @@ public class Deck : MonoBehaviour {
 			card.transform.SetParent(hand.transform);
 			card.transform.localScale = Vector3.one;
 			card.SetActive(false);
+
 			card.GetComponent<Card>().InitializeCard(testCardInfo, testCardInfo, testCardInfo, testCardInfo);
+
+			if(name == "Deck - Player 1") 
+			{
+				card.GetComponent<Image>().sprite = cardBack;
+
+				for(int j=0; j < card.transform.childCount; j++)
+				{
+					card.transform.GetChild(j).gameObject.SetActive(false);
+				}
+
+				card.GetComponent<Card>().selectabled = false;
+			}
+
 			cards.Add(card.GetComponent<Card>());
 		}
 
@@ -56,7 +76,7 @@ public class Deck : MonoBehaviour {
 		}
 	}
 
-	void Draw()
+	public void Draw()
 	{
 		if(cards.Count > 0)
 		{

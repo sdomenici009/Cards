@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -27,14 +28,20 @@ public class Card : MonoBehaviour {
 	private int damage;
 	private int health;
 
-	bool selected = false;
+	public bool selected = false;
 	
 	public Hand hand;
 	public Transform selectedCardPanel;
+	public bool pressed = false;
 
-	private int previousHandPosition;
+	public int previousHandPosition;
+
+	private RectTransform rectTranform;
+
+	public bool selectabled = true;
 
 	void Start () {
+		rectTranform = transform.GetComponent<RectTransform>();
 		foil.sprite = foils[Random.Range(0, foils.Length)];
 	}
 
@@ -47,42 +54,39 @@ public class Card : MonoBehaviour {
 
 		costText.text = cost.ToString();
 		experienceText.text = experience.ToString();
-		healthText.text = health.ToString();
 		damageText.text = damage.ToString();
-	}
-	
-	void Update () {
-		/*
-		if(selected && Input.touches.Length > 0)
-		{
-			//transform.GetComponent<RectTransform>().sizeDelta = transform.GetComponent<RectTransform>().sizeDelta/2f;
-			//transform.position = new Vector3(Input.touches[0].position.x, Input.touches[0].position.y, transform.position.z);
-		}*/
+		healthText.text = health.ToString();
 	}
 
-	public void OnClick()
+	public void OnTouchDown()
 	{
-		if(hand.selectedCard == null)
+		if(selectabled)
 		{
-			if(!selected) 
+			if(hand.selectedCard == null)
 			{
-				previousHandPosition = transform.GetSiblingIndex();
-				transform.SetParent(selectedCardPanel);
-				transform.GetComponent<RectTransform>().sizeDelta = transform.GetComponent<RectTransform>().sizeDelta*2f;
-				transform.localPosition = Vector3.zero;
-
-				hand.selectedCard = this;
-				selected = true;
+				if(!selected) 
+				{	
+					previousHandPosition = transform.GetSiblingIndex();
+					transform.SetParent(selectedCardPanel);
+					rectTranform.sizeDelta = rectTranform.sizeDelta*2f;
+					transform.localPosition = Vector3.zero;
+					
+					hand.selectedCard = this;
+					selected = true;
+				}
+			}
+			else if(hand.selectedCard == this && selected)
+			{
+				pressed = true;
 			}
 		}
-		else
-		if(hand.selectedCard == this && selected)
-		{
-			transform.SetParent(hand.transform);
-			transform.SetSiblingIndex(previousHandPosition);
+	}
 
-			hand.selectedCard = null;
-			selected = false;
+	public void OnTouchUp()
+	{
+		if(pressed)
+		{
+			pressed = false;
 		}
 	}
 }

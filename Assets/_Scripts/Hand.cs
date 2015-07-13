@@ -17,11 +17,45 @@ public class Hand : MonoBehaviour {
 	private Transform selectedCardPanel;
 
 	public Card selectedCard;
+
+	private bool draggingCard = false;
+
+	private int lastTouchCount = 0;
+
+	private bool selectedCardLastPressed = false;
 	
 	void Start () {
 	}
 	
 	void Update () {
+		if(selectedCard != null && selectedCard.selected && selectedCardLastPressed == true && !selectedCard.pressed)
+		{
+			draggingCard = false;
+			
+			selectedCard.transform.SetParent(transform);
+			selectedCard.transform.SetSiblingIndex(selectedCard.previousHandPosition);
+			
+			selectedCard.selected = false;
+			selectedCard = null;
+			selectedCardLastPressed = false;
+		}
+
+		if(!draggingCard && selectedCard != null && selectedCard.pressed)
+		{
+			selectedCard.transform.GetComponent<RectTransform>().sizeDelta = selectedCard.transform.GetComponent<RectTransform>().sizeDelta/2f;
+			draggingCard = true;
+		}
+
+		if(selectedCard != null && draggingCard)
+		{
+			selectedCard.transform.position = Input.mousePosition;
+			//selectedCard.transform.position = new Vector3(Input.touches[0].position.x, Input.touches[0].position.y, transform.position.z);
+		}
+
+		if(selectedCard != null)
+		{
+			selectedCardLastPressed = selectedCard.pressed;
+		}
 	}
 
 	public void AddCard(Card card)
