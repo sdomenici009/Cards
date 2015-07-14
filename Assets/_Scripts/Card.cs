@@ -28,6 +28,8 @@ public class Card : MonoBehaviour {
 	private int damage;
 	private int health;
 
+	public bool placed = false;
+
 	public bool selected = false;
 	
 	public Hand hand;
@@ -60,7 +62,7 @@ public class Card : MonoBehaviour {
 
 	public void OnTouchDown()
 	{
-		if(selectabled)
+		if(selectabled && !placed)
 		{
 			if(hand.selectedCard == null)
 			{
@@ -68,7 +70,7 @@ public class Card : MonoBehaviour {
 				{	
 					previousHandPosition = transform.GetSiblingIndex();
 					transform.SetParent(selectedCardPanel);
-					rectTranform.sizeDelta = rectTranform.sizeDelta*2f;
+					rectTranform.sizeDelta = rectTranform.sizeDelta*3f;
 					transform.localPosition = Vector3.zero;
 					
 					hand.selectedCard = this;

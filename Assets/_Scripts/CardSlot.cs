@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CardSlot : MonoBehaviour {
 
-	private bool occupied = false;
+	public bool occupied = false;
 
 	void Start () {
 	
