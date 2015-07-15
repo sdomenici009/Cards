@@ -3,62 +3,40 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Deck : MonoBehaviour {
+public class Deck {
 
 	private List<Card> cards = new List<Card>();
-
-	public Sprite[] cardBacks;
-
-	[SerializeField]
+	
+	private GameStateManager.Owner owner;
 	private Hand hand;
-
-	[SerializeField]
 	private GameObject cardPrefab;
 
-	void Start () {
-		int testCardInfo = 0;
+	public Deck(GameStateManager.Owner owner, Hand hand, GameObject cardPrefab)
+	{
+		this.owner = owner;
+		this.hand = hand;
+		this.cardPrefab = cardPrefab;
 
-		Sprite cardBack = cardBacks[Random.Range(0, cardBacks.Length)];
+		InstantiateDeck();
+		Shuffle(25);
+	}
+
+	void InstantiateDeck()
+	{
+		int testCardInfo = 0;
 
 		for(int i=0; i < 40; i++)
 		{
 			if(i!=0 && i%4 == 0) testCardInfo++;
-
-			GameObject card = (GameObject)Instantiate(cardPrefab);
+			
+			Card card = ((GameObject)GameObject.Instantiate(cardPrefab)).GetComponent<Card>();
 			card.transform.SetParent(hand.transform);
 			card.transform.localScale = Vector3.one;
-			card.SetActive(false);
-
-			card.GetComponent<Card>().InitializeCard(testCardInfo, testCardInfo, testCardInfo, testCardInfo);
-
-			if(name == "Deck - Player 1") 
-			{
-				card.GetComponent<Image>().sprite = cardBack;
-
-				for(int j=0; j < card.transform.childCount; j++)
-				{
-					card.transform.GetChild(j).gameObject.SetActive(false);
-				}
-
-				card.GetComponent<Card>().selectabled = false;
-			}
-
-			cards.Add(card.GetComponent<Card>());
+			card.gameObject.SetActive(false);
+			card.InitializeCard(testCardInfo, testCardInfo, testCardInfo, testCardInfo);
+			cards.Add(card);
 		}
 
-		Shuffle(25);
-
-		for(int i=0; i < 5; i++)
-		{
-			Draw();
-		}
-	}
-	
-	void Update () {
-		if(Input.GetKeyDown(KeyCode.A))
-		{
-			Shuffle(25);
-		}
 	}
 
 	public void Shuffle(int num)
@@ -84,10 +62,5 @@ public class Deck : MonoBehaviour {
 			cards[0].gameObject.SetActive(true);
 			cards.RemoveAt(0);
 		}
-	}
-	
-	public void OnClick()
-	{
-		Draw();
 	}
 }

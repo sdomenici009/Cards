@@ -40,8 +40,6 @@ public class Card : MonoBehaviour {
 
 	private RectTransform rectTranform;
 
-	public bool selectabled = true;
-
 	void Start () {
 		rectTranform = transform.GetComponent<RectTransform>();
 		foil.sprite = foils[Random.Range(0, foils.Length)];
@@ -62,7 +60,7 @@ public class Card : MonoBehaviour {
 
 	public void OnTouchDown()
 	{
-		if(selectabled && !placed)
+		if(hand.tag == "Player" && !placed)
 		{
 			if(hand.selectedCard == null)
 			{
@@ -86,9 +84,12 @@ public class Card : MonoBehaviour {
 
 	public void OnTouchUp()
 	{
-		if(pressed)
+		if(hand.tag == "Player")
 		{
-			pressed = false;
+			if(pressed)
+			{
+				pressed = false;
+			}
 		}
 	}
 }

@@ -5,12 +5,4 @@ public class Board : MonoBehaviour {
 
 	public CardSlot[] playerCardSlots = new CardSlot[8];
 	public CardSlot[] enemyCardSlots = new CardSlot[8];
-
-	void Start () {
-	
-	}
-	
-	void Update () {
-	
-	}
 }
